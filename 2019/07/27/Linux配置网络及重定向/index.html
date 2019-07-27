@@ -1,0 +1,46 @@
+<!DOCTYPE html><html class="han-init" lang="zh-Hant"><head><meta name="generator" content="Hexo 3.9.0"><meta name="author" content="John Doe"><meta name="description" itemprop="description" content="Linux配置网络ifconfig    ip addr修改/etc/sysconfig/network-script/ifcfg-eth0配置文件来让系统上网。onboot=yes   dhcpifcfg-eth0的配置：DEVICE 接口名（设备,网卡）HWADDR MAC地址TYPE 网络类型"><meta charset="utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Linux配置网络及重定向</title><link rel="stylesheet" type="text/css" href="/font/fantasque_sans_mono/stylesheet.css"><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/webicons/2.0.0/webicons.min.css"><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/Han/3.3.0/han.min.css"><link rel="stylesheet" type="text/css" href="/styles/screen.css"><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/highlight.js/9.9.0/styles/gruvbox-dark.min.css"></head><body><header><a href="/"><img class="logo" src="/images/avatar.gif" alt="Hexo" title="Hexo"></a><h1><a href="/" alt="Hexo" title="Hexo">Hexo</a></h1><p></p><nav><ul><li><a href="/" alt="首页" title="首页">首页</a></li><li><a href="/pigeonhole" alt="归档" title="归档">归档</a></li><li><a href="/links" alt="链接" title="链接">链接</a></li><li><a href="/about" alt="关于" title="关于">关于</a></li></ul><div class="xnews-icon"><a target="_blank" href="/atom.xml">&#xe621;</a><a target="_blank" href="https://github.com/YOUR_GITHUB_ID" style="position: relative; top: -2px;">&#xe735;</a><a target="_blank" href="https://twitter.com/YOUR_TWITTER_ID">&#xe71f;</a><a target="_blank" href="https://www.facebook.com/YOUR_FACEBOOK_ID">&#xe60b;</a><a target="_blank" href="https://www.zhihu.com/people/YOUR_ZHIHU_ID">&#xe63f;</a><a target="_blank" href="https://weibo.com/YOUR_WEIBO_ID" style="position: relative; top: -2px;">&#xe603;</a></div></nav><div class="space"></div></header><main><article class="full"><h1>Linux配置网络及重定向</h1><span class="post-meta">写于<time> 2019 年 07 月 27 日 21 时 55 分</time><br>更新于<time> 2019 年 07 月 27 日 22 时 14 分</time></span><div class="article-toc"><strong>大纲</strong><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Linux配置网络"><span class="toc-number">1.</span> <span class="toc-text">Linux配置网络</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#导出的虚拟机OVA网络问题"><span class="toc-number">2.</span> <span class="toc-text">导出的虚拟机OVA网络问题</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#输入输出重定向"><span class="toc-number">3.</span> <span class="toc-text">输入输出重定向</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#gt-gt-gt-lt-lt-lt-gt-amp-gt-2-amp-gt-2-lt-gt-gt-amp-gt-amp-2"><span class="toc-number">3.1.</span> <span class="toc-text">&gt;   &gt;&gt;    &lt;   &lt;&lt;   :&gt;   &amp;&gt;   2&amp;&gt;   2&lt;&gt;&gt;&amp;   &gt;&amp;2</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#shell中-gt-dev-null-2-gt-amp-1"><span class="toc-number">3.2.</span> <span class="toc-text">shell中 &gt;/dev/null 2&gt;&amp;1</span></a></li></ol></li></ol></div><h2 id="Linux配置网络"><a href="#Linux配置网络" class="headerlink" title="Linux配置网络"></a>Linux配置网络</h2><p>ifconfig    ip addr<br>修改/etc/sysconfig/network-script/ifcfg-eth0配置文件来让系统上网。<br>onboot=yes   dhcp<br>ifcfg-eth0的配置：<br>DEVICE 接口名（设备,网卡）<br>HWADDR MAC地址<br>TYPE 网络类型（通常是Ethemet）<br>NETWORK 网络地址<br>ONBOOT 系统启动的时候网络接口是否有效（yes/no）<br>BOOTPROTO IP的配置方法[none|static|bootp|dhcp]（引导时不使用协议|静态分配<br>IP|BOOTP协议|DHCP协议）<br>IPADDR IP地址<br>NETMASK 网络掩码<br>GATEWAY 默认网关IP地址<br>重启网络systemctl restart network    reboot/service network restart</p>
+<h2 id="导出的虚拟机OVA网络问题"><a href="#导出的虚拟机OVA网络问题" class="headerlink" title="导出的虚拟机OVA网络问题"></a>导出的虚拟机OVA网络问题</h2><p>网络问题<br>vi -rf /etc/udev/rules.d/70-persistent-net.rules<br>name改为eth0 记住ATTR{address}<br>vi /etc/sysconfig/network-scripts/ifcfg-eth0cat<br>将二个地址一样<br>虚拟机设置高级编辑网卡mac也一样<br>重启就可以</p>
+<h2 id="输入输出重定向"><a href="#输入输出重定向" class="headerlink" title="输入输出重定向"></a>输入输出重定向</h2><h3 id="gt-gt-gt-lt-lt-lt-gt-amp-gt-2-amp-gt-2-lt-gt-gt-amp-gt-amp-2"><a href="#gt-gt-gt-lt-lt-lt-gt-amp-gt-2-amp-gt-2-lt-gt-gt-amp-gt-amp-2" class="headerlink" title="&gt;   &gt;&gt;    &lt;   &lt;&lt;   :&gt;   &amp;&gt;   2&amp;&gt;   2&lt;&gt;&gt;&amp;   &gt;&amp;2"></a>&gt;   &gt;&gt;    &lt;   &lt;&lt;   :&gt;   &amp;&gt;   2&amp;&gt;   2&lt;&gt;&gt;&amp;   &gt;&amp;2</h3><p>文件描述符       名称         常用缩写       默认值       对应文件句柄位置<br>0              标准输入        stdin        键盘         /proc/self/fd/0<br>1              标准输出        stdout       屏幕         /proc/self/fd/1<br>2              标准错误输出    stderr        屏幕         /proc/self/fd/2<br>使用&lt;或&gt;时，相当于使用 0&lt; 或 1&gt;</p>
+<h3 id="shell中-gt-dev-null-2-gt-amp-1"><a href="#shell中-gt-dev-null-2-gt-amp-1" class="headerlink" title="shell中 &gt;/dev/null 2&gt;&amp;1"></a>shell中 &gt;/dev/null 2&gt;&amp;1</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&gt;/dev/null</span><br></pre></td></tr></table></figure>
+
+<p>将标准输出1重定向到/dev/null中。 /dev/null是linux的空设备文件，往这个文件里面写入的内容都会丢失。执行了&gt;/dev/null之后，标准输出就会不再存在，没有任何地方能够找到输出的内容。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">2&gt;&amp;1</span><br></pre></td></tr></table></figure>
+
+<p>重定向绑定，采用&amp;可以将两个输出绑定在一起。这条命令的作用是错误输出将和标准输出同用一个文件描述符，错误输出将会和标准输出输出到同一个地方。<br>linux在执行shell命令之前，就会确定好所有的输入输出位置，并且从左到右依次执行重定向的命令，所以&gt;/dev/null 2&gt;&amp;1的作用就是让标准输出重定向到/dev/null中（丢弃标准输出），然后错误输出由于重用了标准输出的描述符，所以错误输出也被定向到了/dev/null中，错误输出同样也被丢弃了。执行了这条命令之后，该条shell命令将不会输出任何信息到控制台，也不会有任何信息输出到文件中。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">2&gt;&amp;1 &gt;/dev/null</span><br></pre></td></tr></table></figure>
+
+<p>2&gt;&amp;1，将错误输出绑定到标准输出上。由于此时的标准输出是默认值，也就是输出到屏幕，所以错误输出会输出到屏幕。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&gt;/dev/null，将标准输出1重定向到/dev/null中。</span><br></pre></td></tr></table></figure>
+
+<p>nohup ping 8.8.8.8 &amp; 将任务放到后台<br>nohup ping 8.8.8.8 &gt; /dev/null 2&gt;&amp;1 &amp;  丢弃所有输出</p>
+<hr><section class="comment"><div id="disqus_thread"></div></section><script>var DISQUS_PAGE_URL = "http://yoursite.com/2019/07/27/Linux配置网络及重定向/";</script><script>var DISQUS_IDENTIFIER = "2019/07/27/Linux配置网络及重定向/";</script><script>var DISQUS_SHORT_NAME = "YOUR_DUOSHUO_ID"</script><script>var disqus_config = function() {
+  this.page.url = DISQUS_PAGE_URL;
+  this.page.identifier = DISQUS_IDENTIFIER;
+};
+
+(function() {
+  var d = document, s = d.createElement("script");
+  s.src = "https://" + DISQUS_SHORT_NAME + ".disqus.com/embed.js";
+  s.setAttribute("data-timestamp", +new Date());
+  (d.head || d.body).appendChild(s);
+})();</script><noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript><footer><section class="copyright">&copy; 2016 - 2019<a href="/">John Doe</a></section><section class="intro">由<a href="https://hexo.io/">Hexo</a>驱动&middot;挂载<a href="https://github.com/xadillax/hexo-xnew">X'new</a>主题</section></footer></article></main><script src="//cdn.bootcss.com/Han/3.3.0/han.min.js"></script><script src="//cdn.bootcss.com/jquery/3.1.1/jquery.min.js"></script><script src="//cdn.bootcss.com/jquery-backstretch/2.0.4/jquery.backstretch.min.js"></script><script src="/scripts/highlight.pack.js"></script><script>$(function() {
+    $("header").backstretch("/images/header.jpeg");
+
+    $("figure.highlight").each(function(i, block) {
+        $(block).removeClass("highlight");
+        $("<pre><code class='__tobehl " + ($(block).attr("class") === "plain" ? "" : ("lang-" + $(block).attr("class"))) + "'></code></pre>").insertAfter($(block));
+        $(block).next().find("code").text((block.innerText || block.textContent));
+        $(block).remove();
+    });
+    $(".__tobehl").each(function(i, block) {
+        hljs.highlightBlock(block);
+    });
+
+    $("article.full img").each(function() {
+        $(this).parent().css("text-align", "center");
+    });
+
+    if($(".article-toc").children().length < 2) {
+        $(".article-toc").css("display", "none");
+    }
+});</script></body></html>
