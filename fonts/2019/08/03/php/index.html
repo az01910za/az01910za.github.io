@@ -1,0 +1,22 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta name="generator" content="Hexo 3.9.0"><meta charset="utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="author" content="John Doe"><link rel="alternative" href="/atom.xml" title="昵称不可为空" type="application/atom+xml"><link rel="icon" href="/favicon.png"><title>php - 昵称不可为空</title><link rel="stylesheet" href="/css/main.css"><link rel="stylesheet" href="/js/fancybox/jquery.fancybox.min.css"><!--[if lt IE 9]><script>(function(a,b){a="abbr article aside audio bdi canvas data datalist details dialog figcaption figure footer header hgroup main mark meter nav output progress section summary template time video".split(" ");for(b=a.length-1;b>=0;b--)document.createElement(a[b])})()</script><![endif]--><script src="/js/jquery-3.1.1.min.js"></script><script src="/js/fancybox/jquery.fancybox.min.js"></script></head><body style="opacity:0"><header class="head"><h1 class="head-title u-fl"><a href="/">昵称不可为空</a></h1><nav class="head-nav u-fr"><ul class="head-nav__list"><li class="head-nav__item"><a class="head-nav__link" href="/tags">标签</a></li><li class="head-nav__item"><a class="head-nav__link" href="/archives">目录</a></li></ul></nav></header><main class="main"><article class="post"><header class="post__head"><time class="post__time" datetime="2019-08-03T02:28:24.604Z">2019 - 08 - 03 10:28:24</time><h1 class="post__title"><a href="/2019/08/03/php/">php</a></h1><div class="post__main echo"><p>PHP</p>
+<p>每一条命令之间都要间隔;  ;是结束符</p>
+<p>单行注释 在开头加上//或者#<br>多行注释 开头是/* 结束是*/</p>
+<p>在PHP当中除了单引号之外任何的字符只要放在单引号当中就没有任何意义<br>在PHP中双引号放入特殊字符，将会有特殊的意义</p>
+<p>在EOF中变量有意义，其他的特殊字符都没有意义<br>EOF在标签里的内容不需要区分单/双引号<br>&lt;&lt;&lt;EOF<br>EOF;</p>
+<p>转义 是通过/将普通字符串变为特殊字符，特殊字符变为普通字符</p>
+<p>PHP有四种标签方式<br><?php     ?><br><?  ?><br>&lt;%  %&gt;</p>
+<script language="php/text"></script>
+
+<p>变量的数据类型<br>布尔类型(bool）<br>整形(int) 正数0     负数  但是不是无穷大的<br>浮点型(float） 小数<br>字符串(string)  ‘’  “”  &lt;&lt;&lt;EOF  EOF<br>资源(resource） STDIN STDOUT STDERROP 打开的网络连接 打开的文件<br>空类型(NULL） NULL 什么都没有的意思<br>数组(array)  就是一个集合，里面可以放任意的东西<br>对象(class)   new person（）<br>使用var_dump()来查看类型</p>
+<p>PHP是用.去连接的</p>
+<p>PHP变量是以$开头的，后面跟着变量的名称，变量名必须是字母或者下划线字符开始，变量名只能包含字母，数字，字符以及下划线</p>
+<p>PHP中的常量：<br>常量一旦赋值不会改变，尽量使用大写<br>常量分为系统常量和自定义常量<br>常量可以理解为值不会有改变的量<br>定义常量：<br>使用PHP中的函数define()</p>
+<p>常用的系统常量：<br><em>FILE</em>:php程序文件名和路径<br><em>DIR</em>:被调用的文件脚本所在的目录<br><em>FUNCTION</em>:函数名<br><em>LINE</em>:php程序文件行数<br>PHP_VERSION:当前解析器的版本号<br>php_OS:执行当前PHP版本的操作系统名称</p>
+<p>php的输出语句：<br>echo 输出语句和变量<br>echo ;<br>如果要输出的是字符串要加单引号<br>echo ‘’;<br>输出的时候可以在里面加入HTML语句<br>print输出<br>print();<br>printf和print_r也是输出<br>die<br>var_dump 显示变量内容</p>
+<p>写文件标准输出STDOUT<br>读文件STDIN</p>
+<p>$_POST<br>$_GET<br>$_REQUEST 是包含’GET’和’POSTO’</p>
+<p>需要开启短标签支持，改php.ini配置文件short_open_tag</p>
+<p>php文件后缀php apache<br>cgi模式<br>Module模式<br>Php输出：echo  print  printf  sprint  print_r  die  var_dump</p>
+<p>客户端terminal<br>php 文件名.php<br>php output.php -n zs -p 123 -u <a href="http://baidu.com" target="_blank" rel="noopener">http://baidu.com</a></p>
+<p>变量的数据类型：布尔（bool），整型(int)，浮点型(float),字符串（string），资源(resource),空类型（NULL）,数组（array）,对象(class),用var_dump()来查看类型</p>
+</div></header></article><section class="reward"><a class="btn-reward" href="#">打赏</a><div class="reward-wrapper clearfix"><img src="/img/wechat.png" title="微信"></div></section></main><footer class="foot"><div class="foot-copy">&copy; 2016 - 2019 John Doe</div></footer><script src="/js/scroller.js"></script><script src="/js/main.js"></script></body></html>
