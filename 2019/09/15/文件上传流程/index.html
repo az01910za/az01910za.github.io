@@ -1,0 +1,59 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta name="generator" content="Hexo 3.9.0"><meta charset="utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="author" content="John Doe"><link rel="alternative" href="/atom.xml" title="昵称不可为空" type="application/atom+xml"><link rel="icon" href="/favicon.png"><title>文件上传流程 - 昵称不可为空</title><link rel="stylesheet" href="/css/main.css"><link rel="stylesheet" href="/js/fancybox/jquery.fancybox.min.css"><!--[if lt IE 9]><script>(function(a,b){a="abbr article aside audio bdi canvas data datalist details dialog figcaption figure footer header hgroup main mark meter nav output progress section summary template time video".split(" ");for(b=a.length-1;b>=0;b--)document.createElement(a[b])})()</script><![endif]--><script src="/js/jquery-3.1.1.min.js"></script><script src="/js/fancybox/jquery.fancybox.min.js"></script></head><body style="opacity:0"><header class="head"><h1 class="head-title u-fl"><a href="/">昵称不可为空</a></h1><nav class="head-nav u-fr"><ul class="head-nav__list"><li class="head-nav__item"><a class="head-nav__link" href="/tags">标签</a></li><li class="head-nav__item"><a class="head-nav__link" href="/archives">目录</a></li></ul></nav></header><main class="main"><article class="post"><header class="post__head"><time class="post__time" datetime="2019-09-15T09:06:29.888Z">2019 - 09 - 15 17:06:29</time><h1 class="post__title"><a href="/2019/09/15/文件上传流程/">文件上传流程</a></h1><div class="post__main echo"><h2 id="1-尝试前端绕过"><a href="#1-尝试前端绕过" class="headerlink" title="1. 尝试前端绕过"></a>1. 尝试前端绕过</h2><p>function checkFile() {</p>
+<p>​    var file = document.getElementsByName(‘upload_file’)[0].value;</p>
+<p>​    if (file == null || file == “”) {</p>
+<p>​        alert(“请选择要上传的文件!”);</p>
+<p>​        return false;</p>
+<p>​    }</p>
+<p>像上面代码属于前端检测</p>
+<p>三种方式</p>
+<p>删除onsubmit的检测事件  禁用javascript  上传.jpg然后用burp改为.php</p>
+<h2 id="2-尝试文件类型绕过"><a href="#2-尝试文件类型绕过" class="headerlink" title="2. 尝试文件类型绕过"></a>2. 尝试文件类型绕过</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">if (file_exists(UPLOAD_PATH)) &#123;</span><br><span class="line">        if (($_FILES[&apos;upload_file&apos;][&apos;type&apos;] == &apos;image/jpeg&apos;) || ($_FILES[&apos;upload_file&apos;][&apos;type&apos;] == &apos;image/png&apos;) || ($_FILES[&apos;upload_file&apos;][&apos;type&apos;] == &apos;image/gif&apos;)) &#123;</span><br><span class="line">            $temp_file = $_FILES[&apos;upload_file&apos;][&apos;tmp_name&apos;];</span><br><span class="line">            $img_path = UPLOAD_PATH . &apos;/&apos; . $_FILES[&apos;upload_file&apos;][&apos;name&apos;]</span><br></pre></td></tr></table></figure>
+
+<p>使用burp抓包，将文件类型改为image/gif  image/png  image/jpg</p>
+<h2 id="3-黑名单检测绕过方法"><a href="#3-黑名单检测绕过方法" class="headerlink" title="3. 黑名单检测绕过方法"></a>3. 黑名单检测绕过方法</h2><p>$deny_ext = array(“.php”,”.php5”,”.php4”,”.php3”,”.php2”,”.html”,”.htm”,”.phtml”,”.pht”,”.pHp”,”.pHp5”,”.pHp4”,”.pHp3”,”.pHp2”,”.Html”,”.Htm”,”.pHtml”,”.jsp”,”.jspa”,”.jspx”,”.jsw”,”.jsv”,”.jspf”,”.jtml”,”.jSp”,”.jSpx”,”.jSpa”,”.jSw”,”.jSv”,”.jSpf”,”.jHtml”,”.asp”,”.aspx”,”.asa”,”.asax”,”.ascx”,”.ashx”,”.asmx”,”.cer”,”.aSp”,”.aSpx”,”.aSa”,”.aSax”,”.aScx”,”.aShx”,”.aSmx”,”.cEr”,”.sWf”,”.swf”,”.htaccess”);</p>
+<p>​        $file_name = trim($_FILES[‘upload_file’][‘name’]);</p>
+<p>​        $file_name = deldot($file_name);//删除文件名末尾的点</p>
+<p>​        $file_ext = strrchr($file_name, ‘.’);</p>
+<p>​        $file_ext = strtolower($file_ext); //转换为小写</p>
+<p>​        $file_ext = str_ireplace(‘::$DATA’, ‘’, $file_ext);//去除字符串::$DATA</p>
+<p>​        $file_ext = trim($file_ext); //首尾去空</p>
+<p>$file_name = str_ireplace($deny_ext,””, $file_name);//删除后缀</p>
+<p>这些属于黑名单防御手段</p>
+<p>1写有一句话文件后缀变为phtml,php3  </p>
+<p>2</p>
+<p>&lt;FilesMatch “abc”&gt;</p>
+<p>SetHandler application/x-httpd-php</p>
+
+
+<p>保存文件名为.htaccess 先上传</p>
+<p>再上传abc.jpg(一句话文件，名字中包含abc就可以，图片马也行，受重命名影响)</p>
+<p>3使用大小写1.pHP   1.PhP</p>
+<p>4 burp抓包文件名.php后面加空格(文件重命名没有影响)</p>
+<p>5 .php后面加<strong>.</strong> (文件重命名没有影响)</p>
+<p>6 burp抓包文件名.php后面加::$DATA(受重命名影响)</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">7 尝试  点空格点  ::$DATA 根据代码删除顺序和删除关键字符次数进行组合尝试绕过</span><br></pre></td></tr></table></figure>
+
+<p>8 $file_name = str_ireplace($deny_ext,””, $file_name);</p>
+<p>删除后缀的语句，尝试双写绕过1.pphphp</p>
+<h2 id="4-白名单检测绕过方法"><a href="#4-白名单检测绕过方法" class="headerlink" title="4.白名单检测绕过方法"></a>4.白名单检测绕过方法</h2><p>1 如果白名单不对文件重命名可以使用::$DATA方式</p>
+<p>2</p>
+<p>图片保存路径get方式</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$ext_arr = array(&apos;jpg&apos;,&apos;png&apos;,&apos;gif&apos;);</span><br><span class="line">    $file_ext = substr($_FILES[&apos;upload_file&apos;][&apos;name&apos;],strrpos($_FILES[&apos;upload_file&apos;][&apos;name&apos;],&quot;.&quot;)+1);</span><br><span class="line">    if(in_array($file_ext,$ext_arr))&#123;</span><br><span class="line">        $temp_file = $_FILES[&apos;upload_file&apos;][&apos;tmp_name&apos;];</span><br><span class="line">        $img_path = $_GET[&apos;save_path&apos;].&quot;/&quot;.rand(10, 99).date(&quot;YmdHis&quot;).&quot;.&quot;.$file_ext;</span><br></pre></td></tr></table></figure>
+
+<p>采用%00截断</p>
+<p><img src="https://s2.ax1x.com/2019/09/15/ngwoFK.png" alt></p>
+<p><img src="https://s2.ax1x.com/2019/09/15/ng0kOs.png" alt></p>
+<p><img src="https://s2.ax1x.com/2019/09/15/ng0mkV.png" alt></p>
+<h2 id="5-上传图片马"><a href="#5-上传图片马" class="headerlink" title="5.上传图片马"></a>5.上传图片马</h2><p><img src="https://s2.ax1x.com/2019/09/15/ng0BXd.png" alt></p>
+<p><img src="https://s2.ax1x.com/2019/09/15/ng0cAP.png" alt></p>
+<p><img src="https://s2.ax1x.com/2019/09/15/ng0gtf.png" alt></p>
+<p>将图片马上传(将一句话写入到十六进制文件中,</p>
+<p>Windows:copy logo.jpg /b + 404.php /a hack.jpg</p>
+<p>Linux:cat 404.php &gt;&gt; 1.png)</p>
+<p>利用需要结合文件包含漏洞</p>
+<p><img src="https://s2.ax1x.com/2019/09/15/ng0Ins.png" alt></p>
+<p><img src="https://s2.ax1x.com/2019/09/15/ng0X3F.png" alt></p>
+<p><img src="https://s2.ax1x.com/2019/09/15/ng0zu9.png" alt></p>
+<p>十六进制工具打开， gif变化少，文件内容要多，图片里内容避免&lt;?</p>
+<p>上传正常图片再下载与原文件对比没有变化地方替换为一句话，原文件替换，注意字符占位，再上传</p>
+</div></header></article><section class="reward"><a class="btn-reward" href="#">打赏</a><div class="reward-wrapper clearfix"><img src="/img/wechat.png" title="微信"></div></section></main><footer class="foot"><div class="foot-copy">&copy; 2016 - 2019 John Doe</div></footer><script src="/js/scroller.js"></script><script src="/js/main.js"></script></body></html>
